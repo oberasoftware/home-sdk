@@ -1,11 +1,9 @@
 package com.oberasoftware.home.api.converters;
 
 /**
- * This is the a message converter interface
- *
  * @author Renze de Vries
  */
-public interface MessageConverter {
+public interface ConvertManager {
 
     /**
      * This converts the specified source message into the target type using all converters that are available

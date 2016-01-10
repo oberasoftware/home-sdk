@@ -1,17 +1,9 @@
 package com.oberasoftware.home.api.converters;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
+ * This is the a message converter marker interface. All methods capable of converting should be annotated by @{link TypeConverter} type.
+ *
  * @author Renze de Vries
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Converter {
+public interface Converter {
 }
