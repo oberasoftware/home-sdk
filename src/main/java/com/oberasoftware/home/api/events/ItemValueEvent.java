@@ -1,4 +1,4 @@
-package com.oberasoftware.home.api.events.items;
+package com.oberasoftware.home.api.events;
 
 import com.oberasoftware.home.api.events.ItemEvent;
 import com.oberasoftware.home.api.events.ValueEvent;
