@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>com.oberasoftware</groupId>
-    <artifactId>home-api</artifactId>
+    <artifactId>home-sdk</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <properties>
         <obera.base.version>1.0</obera.base.version>
@@ -76,6 +76,12 @@
                 <artifactId>obera-base</artifactId>
                 <version>${obera.base.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.oberasoftware</groupId>
+                <artifactId>home-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -132,6 +138,11 @@
             </plugin>
         </plugins>
     </build>
+
+    <modules>
+      <module>home-api</module>
+      <module>home-model</module>
+    </modules>
 
     <profiles>
         <profile>
