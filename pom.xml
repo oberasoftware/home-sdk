@@ -142,6 +142,7 @@
     <modules>
       <module>home-api</module>
       <module>home-model</module>
+        <module>home-util</module>
     </modules>
 
     <profiles>
