@@ -8,12 +8,15 @@ import com.oberasoftware.home.api.types.Value;
  */
 public class ValueImpl implements Value {
     
-    private final Object value;
-    private final VALUE_TYPE type;
+    private Object value;
+    private VALUE_TYPE type;
 
     public ValueImpl(VALUE_TYPE type, Object value) {
         this.type = type;
         this.value = value;
+    }
+
+    public ValueImpl() {
     }
 
     @Override
