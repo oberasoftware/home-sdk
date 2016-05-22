@@ -3,24 +3,29 @@ package com.oberasoftware.home.api.impl.state;
 import com.google.common.collect.Lists;
 import com.oberasoftware.home.api.model.State;
 import com.oberasoftware.home.api.model.StateItem;
-import com.oberasoftware.home.api.model.Status;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
 
 /**
  * @author renarj
  */
 public class StateImpl implements State {
 
+    private final String controllerId;
     private final String itemId;
-    private final Status deviceStatus;
-    private final ConcurrentMap<String, StateItem> stateItems = new ConcurrentHashMap<>();
+    private final Map<String, StateItem> states = new HashMap<>();
 
-    public StateImpl(String itemId, Status deviceStatus) {
+    public StateImpl(String controllerId, String itemId, List<StateItem> stateItems) {
+        this.controllerId = controllerId;
         this.itemId = itemId;
-        this.deviceStatus = deviceStatus;
+        stateItems.forEach(s -> states.put(s.getLabel(), s));
+    }
+
+    @Override
+    public String getControllerId() {
+        return this.controllerId;
     }
 
     @Override
@@ -30,37 +35,19 @@ public class StateImpl implements State {
 
     @Override
     public List<StateItem> getStateItems() {
-        return Lists.newArrayList(stateItems.values());
+        return Lists.newArrayList(states.values());
     }
 
     @Override
     public StateItem getStateItem(String label) {
-        return stateItems.get(label.toLowerCase());
-    }
-
-    @Override
-    public Status getDeviceStatus() {
-        return deviceStatus;
-    }
-
-    public boolean updateIfChanged(String label, StateItem stateItem) {
-        String normalisedLabel = label.toLowerCase();
-
-        boolean updated = true;
-        if(stateItems.containsKey(normalisedLabel)) {
-            //if the existing item is different than new item it is updated
-            updated = !stateItems.get(normalisedLabel).equals(stateItem);
-        }
-        this.stateItems.put(normalisedLabel, stateItem);
-        return updated;
+        return states.get(label.toLowerCase());
     }
 
     @Override
     public String toString() {
         return "StateImpl{" +
                 "itemId='" + itemId + '\'' +
-                ", deviceStatus=" + deviceStatus +
-                ", stateItems=" + stateItems +
+                ", stateItems=" + states +
                 '}';
     }
 }
