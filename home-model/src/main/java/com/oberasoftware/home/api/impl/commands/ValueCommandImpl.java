@@ -12,12 +12,19 @@ import java.util.Map;
 public class ValueCommandImpl implements ItemValueCommand {
 
     private final String itemId;
+    private final String controllerId;
 
     private Map<String, Value> values = new HashMap<>();
 
-    public ValueCommandImpl(String itemId, Map<String, Value> values) {
+    public ValueCommandImpl(String controllerId, String itemId, Map<String, Value> values) {
+        this.controllerId = controllerId;
         this.itemId = itemId;
         this.values = values;
+    }
+
+    @Override
+    public String getControllerId() {
+        return controllerId;
     }
 
     @Override

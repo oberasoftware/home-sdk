@@ -12,12 +12,19 @@ import java.util.Map;
  */
 public class SwitchCommandImpl implements SwitchCommand {
 
+    private final String controllerId;
     private final String itemId;
     private final STATE state;
 
-    public SwitchCommandImpl(String itemId, STATE state) {
+    public SwitchCommandImpl(String controllerId, String itemId, STATE state) {
+        this.controllerId = controllerId;
         this.itemId = itemId;
         this.state = state;
+    }
+
+    @Override
+    public String getControllerId() {
+        return controllerId;
     }
 
     @Override
