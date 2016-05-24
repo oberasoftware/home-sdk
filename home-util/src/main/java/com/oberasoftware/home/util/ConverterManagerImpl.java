@@ -1,7 +1,7 @@
 package com.oberasoftware.home.util;
 
 import com.google.common.reflect.TypeToken;
-import com.oberasoftware.home.api.converters.ConvertManager;
+import com.oberasoftware.home.api.converters.ConverterManager;
 import com.oberasoftware.home.api.converters.Converter;
 import com.oberasoftware.home.api.converters.TypeConverter;
 import com.oberasoftware.home.api.exceptions.ConversionException;
@@ -24,7 +24,7 @@ import static java.util.Arrays.asList;
  * @author Renze de Vries
  */
 @Component
-public class ConverterManagerImpl implements ConvertManager {
+public class ConverterManagerImpl implements ConverterManager {
     private static final Logger LOG = LoggerFactory.getLogger(ConverterManagerImpl.class);
 
     private static final String KEY_FORMAT = "%s.%s";

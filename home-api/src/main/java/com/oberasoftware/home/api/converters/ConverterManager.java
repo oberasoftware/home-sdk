@@ -3,7 +3,7 @@ package com.oberasoftware.home.api.converters;
 /**
  * @author Renze de Vries
  */
-public interface ConvertManager {
+public interface ConverterManager {
 
     /**
      * This converts the specified source message into the target type using all converters that are available
