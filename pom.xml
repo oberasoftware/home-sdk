@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <obera.base.version>1.0</obera.base.version>
+        <obera.base.version>1.1-SNAPSHOT</obera.base.version>
         <guava.version>18.0</guava.version>
     </properties>
 
@@ -40,6 +40,26 @@
         <developerConnection>scm:git:git@github.com:oberasoftware/home-api.git</developerConnection>
         <url>git@github.com:oberasoftware/home-api.git</url>
     </scm>
+
+    <repositories>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>bintray</id>
+            <url>http://dl.bintray.com/andsel/maven/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -48,7 +68,56 @@
     </distributionManagement>
 
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.oberasoftware</groupId>
+                <artifactId>home-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.oberasoftware</groupId>
+                <artifactId>home-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.oberasoftware</groupId>
+                <artifactId>home-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.oberasoftware</groupId>
+                <artifactId>obera-base</artifactId>
+                <version>${obera.base.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.moquette</groupId>
+                <artifactId>moquette-broker</artifactId>
+                <version>0.8</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.paho</groupId>
+                <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+                <version>1.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.9.5</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -62,28 +131,10 @@
             <groupId>com.oberasoftware</groupId>
             <artifactId>obera-base</artifactId>
         </dependency>
+
+
     </dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.oberasoftware</groupId>
-                <artifactId>obera-base</artifactId>
-                <version>${obera.base.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.oberasoftware</groupId>
-                <artifactId>home-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
@@ -143,6 +194,7 @@
       <module>home-api</module>
       <module>home-model</module>
         <module>home-util</module>
+        <module>home-mqtt</module>
     </modules>
 
     <profiles>
