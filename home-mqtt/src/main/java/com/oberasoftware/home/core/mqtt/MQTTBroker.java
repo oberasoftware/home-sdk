@@ -74,6 +74,10 @@ public class MQTTBroker {
         }
     }
 
+    public boolean isConnected() {
+        return connected.get();
+    }
+
     public void disconnect() {
         if(connected.get()) {
             try {
@@ -84,12 +88,14 @@ public class MQTTBroker {
         }
     }
 
-    public void subscribeTopic(String topic, MQTTListener listener) {
-        if(connected.get()) {
-            listeners.add(listener);
+    public void addListener(MQTTListener listener) {
+        listeners.add(listener);
+    }
 
+    public void subscribeTopic(String topic) {
+        if(connected.get()) {
             try {
-                client.subscribe(topic);
+                client.subscribe(topic, 1);
             } catch (MqttException e) {
                 LOG.error("Could not subscribe to topic: " + topic, e);
             }
@@ -99,7 +105,10 @@ public class MQTTBroker {
     public void publish(MQTTMessage message) {
         if(connected.get()) {
             try {
-                client.publish(message.getTopic(), new MqttMessage(message.getMessage().getBytes()));
+                MqttMessage m = new MqttMessage(message.getMessage().getBytes());
+                m.setQos(1);
+
+                client.publish(message.getTopic(), m);
             } catch (MqttException e) {
                 LOG.error("Could not publish message: " + message, e);
             }

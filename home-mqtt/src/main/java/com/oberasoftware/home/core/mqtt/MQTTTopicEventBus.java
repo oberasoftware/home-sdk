@@ -51,11 +51,7 @@ public class MQTTTopicEventBus implements DistributedTopicEventBus {
     @Override
     public void subscribe(String topic) {
         LOG.info("Subscribing to topic: {}", topic);
-        broker.subscribeTopic(topic, (receivedTopic, payload) -> {
-            LOG.debug("Received a message on topic: {} with payload: {}", receivedTopic, payload);
-
-            localEventBus.publish(new MQTTMessageImpl(receivedTopic, payload));
-        });
+        broker.subscribeTopic(topic);
     }
 
     @Override
@@ -69,12 +65,22 @@ public class MQTTTopicEventBus implements DistributedTopicEventBus {
     }
 
     @Override
-    public void connect() {
-        try {
-            broker.connect();
-            LOG.info("Connected to MQTT Broker: {} with user: {}", mqttHost, mqttUsername);
-        } catch (HomeAutomationException e) {
-            throw new RuntimeHomeAutomationException("Unable to connect to MQTT Broker", e);
+    public synchronized void connect() {
+        if(!broker.isConnected()) {
+            try {
+                broker.connect();
+                LOG.info("Connected to MQTT Broker: {} with user: {}", mqttHost, mqttUsername);
+
+                broker.addListener((receivedTopic, payload) -> {
+                    LOG.debug("Received a message on topic: {} with payload: {}", receivedTopic, payload);
+
+                    localEventBus.publish(new MQTTMessageImpl(receivedTopic, payload));
+                });
+            } catch (HomeAutomationException e) {
+                throw new RuntimeHomeAutomationException("Unable to connect to MQTT Broker", e);
+            }
+        } else {
+            LOG.warn("Already connected to broker");
         }
     }
 
