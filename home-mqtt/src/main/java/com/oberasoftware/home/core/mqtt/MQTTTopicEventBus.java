@@ -25,8 +25,13 @@ import java.util.List;
 public class MQTTTopicEventBus implements DistributedTopicEventBus {
     private static final Logger LOG = LoggerFactory.getLogger(MQTTTopicEventBus.class);
 
+    private static final String CONNECTION_STRING = "tcp://%s:%d";
+
     @Value("${mqtt.host}")
     private String mqttHost;
+
+    @Value("${mqtt.port:1883}")
+    private int mqttPort;
 
     @Value("${mqtt.username:}")
     private String mqttUsername;
@@ -44,7 +49,8 @@ public class MQTTTopicEventBus implements DistributedTopicEventBus {
 
     @PostConstruct
     public void initialize() throws HomeAutomationException {
-        broker = new MQTTBroker(mqttHost, mqttUsername, mqttPassword);
+        String connectionString = String.format(CONNECTION_STRING, mqttHost, mqttPort);
+        broker = new MQTTBroker(connectionString, mqttUsername, mqttPassword);
         localEventBus.registerFilter(new MQTTPathFilter());
     }
 
