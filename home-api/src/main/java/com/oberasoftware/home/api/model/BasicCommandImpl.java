@@ -51,6 +51,11 @@ public class BasicCommandImpl implements BasicCommand {
     }
 
     @Override
+    public String getProperty(String property) {
+        return properties.get(property);
+    }
+
+    @Override
     public String toString() {
         return "BasicCommandImpl{" +
                 "controllerId='" + controllerId + '\'' +

@@ -9,4 +9,6 @@ public interface BasicCommand extends ItemCommand {
     String getCommandType();
 
     Map<String, String> getProperties();
+
+    String getProperty(String property);
 }
