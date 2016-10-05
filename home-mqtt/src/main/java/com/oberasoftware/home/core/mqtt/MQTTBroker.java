@@ -59,6 +59,7 @@ public class MQTTBroker {
             });
             MqttConnectOptions options = new MqttConnectOptions();
             options.setKeepAliveInterval(20);
+            options.setMaxInflight(10000);
 
             if(!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)) {
                 LOG.info("Authentication details specified, using for connection");
