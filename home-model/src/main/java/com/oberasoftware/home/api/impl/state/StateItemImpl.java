@@ -1,5 +1,7 @@
 package com.oberasoftware.home.api.impl.state;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.oberasoftware.home.api.impl.types.ValueImpl;
 import com.oberasoftware.home.api.model.StateItem;
 import com.oberasoftware.home.api.types.Value;
 
@@ -8,12 +10,17 @@ import com.oberasoftware.home.api.types.Value;
  */
 public class StateItemImpl implements StateItem {
 
-    private final String label;
-    private final Value value;
+    private String label;
+
+    @JsonDeserialize(as=ValueImpl.class)
+    private Value value;
 
     public StateItemImpl(String label, Value value) {
         this.label = label;
         this.value = value;
+    }
+
+    public StateItemImpl() {
     }
 
     @Override
@@ -21,9 +28,17 @@ public class StateItemImpl implements StateItem {
         return label;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     @Override
     public Value getValue() {
         return value;
+    }
+
+    public void setValue(Value value) {
+        this.value = value;
     }
 
     @Override

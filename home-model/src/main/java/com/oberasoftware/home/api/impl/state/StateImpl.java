@@ -1,5 +1,6 @@
 package com.oberasoftware.home.api.impl.state;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.Lists;
 import com.oberasoftware.home.api.model.State;
 import com.oberasoftware.home.api.model.StateItem;
@@ -13,9 +14,11 @@ import java.util.Map;
  */
 public class StateImpl implements State {
 
-    private final String controllerId;
-    private final String itemId;
-    private final Map<String, StateItem> states = new HashMap<>();
+    private String controllerId;
+    private String itemId;
+
+    @JsonDeserialize(as = StateItemImpl.class)
+    private Map<String, StateItem> states = new HashMap<>();
 
     public StateImpl(String controllerId, String itemId, List<StateItem> stateItems) {
         this.controllerId = controllerId;
@@ -23,9 +26,16 @@ public class StateImpl implements State {
         stateItems.forEach(s -> states.put(s.getLabel(), s));
     }
 
+    public StateImpl() {
+    }
+
     @Override
     public String getControllerId() {
         return this.controllerId;
+    }
+
+    public void setControllerId(String controllerId) {
+        this.controllerId = controllerId;
     }
 
     @Override
@@ -33,9 +43,18 @@ public class StateImpl implements State {
         return itemId;
     }
 
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
     @Override
     public List<StateItem> getStateItems() {
         return Lists.newArrayList(states.values());
+    }
+
+    @JsonDeserialize(contentAs = StateItemImpl.class)
+    public void setStates(Map<String, StateItem> states) {
+        this.states = states;
     }
 
     @Override
