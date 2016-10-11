@@ -1,6 +1,8 @@
 package com.oberasoftware.home.client.state;
 
-import com.oberasoftware.home.api.impl.state.StateImpl;
+import com.oberasoftware.home.api.client.StateServiceClient;
+import com.oberasoftware.home.api.client.StateServiceListener;
+import com.oberasoftware.home.api.model.ValueTransportMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,22 +19,25 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Renze de Vries
  */
 @Component
-public class StateServiceClient {
-    private static final Logger LOG = LoggerFactory.getLogger(StateServiceClient.class);
+public class StateServiceClientImpl implements StateServiceClient {
+    private static final Logger LOG = LoggerFactory.getLogger(StateServiceClientImpl.class);
 
     @Value("${state_svc_url}")
     private String stateServiceUrl;
 
     private WebSocketStompClient stompClient;
 
+    private List<StateServiceListener> listeners = new CopyOnWriteArrayList<>();
+
+    @Override
     public void connect() {
         LOG.info("Connecting to State websocket endpoint: {}", getStateServiceUrl());
-//        WebSocketClient webSocketClient = new StandardWebSocketClient();
         List<Transport> transports = new ArrayList<>(1);
         transports.add(new WebSocketTransport( new StandardWebSocketClient()));
         WebSocketClient transport = new SockJsClient(transports);
@@ -40,13 +45,19 @@ public class StateServiceClient {
         stompClient = new WebSocketStompClient(transport);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
-        StompSessionHandler sessionHandler = new MySessionHandler();
+        StompSessionHandler sessionHandler = new StateServiceSessionHandler();
         stompClient.connect(getStateServiceUrl(), sessionHandler);
     }
 
+    @Override
     public void disconnect() {
         LOG.info("Disconnect websocket client");
         stompClient.stop();
+    }
+
+    @Override
+    public void listen(StateServiceListener listener) {
+        this.listeners.add(listener);
     }
 
     private String getStateServiceUrl() {
@@ -57,33 +68,32 @@ public class StateServiceClient {
         return url + "ws";
     }
 
-    private class MySessionHandler extends StompSessionHandlerAdapter {
+    private class StateServiceSessionHandler extends StompSessionHandlerAdapter {
         @Override
         public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
             LOG.info("Connected to state service");
             session.subscribe("/topic/state", new StompFrameHandler() {
                 @Override
                 public Type getPayloadType(StompHeaders stompHeaders) {
-                    return StateImpl.class;
+                    return ValueTransportMessage.class;
                 }
 
                 @Override
                 public void handleFrame(StompHeaders stompHeaders, Object o) {
-                    LOG.info("Received a state message: {}", o);
+                    LOG.debug("Received a state message: {}", o);
+                    listeners.forEach(l -> l.receive((ValueTransportMessage) o));
                 }
             });
         }
 
-
-
         @Override
         public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-            LOG.error("Something went wrong?: {}, {}", exception, headers.getContentType());
+            LOG.error("StateService communication error: {} content: {}", exception.getMessage(), new String(payload));
         }
 
         @Override
         public void handleTransportError(StompSession session, Throwable exception) {
-            LOG.error("IEK", exception);
+            LOG.error("StateService Transport error", exception);
         }
     }
 }

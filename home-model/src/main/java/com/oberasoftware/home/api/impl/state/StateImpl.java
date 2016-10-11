@@ -5,9 +5,9 @@ import com.google.common.collect.Lists;
 import com.oberasoftware.home.api.model.State;
 import com.oberasoftware.home.api.model.StateItem;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author renarj
@@ -17,13 +17,13 @@ public class StateImpl implements State {
     private String controllerId;
     private String itemId;
 
-    @JsonDeserialize(as = StateItemImpl.class)
-    private Map<String, StateItem> states = new HashMap<>();
+    @JsonDeserialize(contentAs = StateItemImpl.class)
+    private List<StateItem> stateItems = new ArrayList<>();
 
     public StateImpl(String controllerId, String itemId, List<StateItem> stateItems) {
         this.controllerId = controllerId;
         this.itemId = itemId;
-        stateItems.forEach(s -> states.put(s.getLabel(), s));
+        this.stateItems = stateItems;
     }
 
     public StateImpl() {
@@ -49,24 +49,24 @@ public class StateImpl implements State {
 
     @Override
     public List<StateItem> getStateItems() {
-        return Lists.newArrayList(states.values());
+        return Lists.newArrayList(stateItems);
     }
 
-    @JsonDeserialize(contentAs = StateItemImpl.class)
-    public void setStates(Map<String, StateItem> states) {
-        this.states = states;
+    public void setStateItems(List<StateItem> stateItems) {
+        this.stateItems = stateItems;
     }
 
     @Override
     public StateItem getStateItem(String label) {
-        return states.get(label.toLowerCase());
+        Optional<StateItem> r = stateItems.stream().filter(s -> s.getLabel().equalsIgnoreCase(label)).findAny();
+        return r.isPresent() ? r.get() : null;
     }
 
     @Override
     public String toString() {
         return "StateImpl{" +
                 "itemId='" + itemId + '\'' +
-                ", stateItems=" + states +
+                ", stateItems=" + stateItems +
                 '}';
     }
 }

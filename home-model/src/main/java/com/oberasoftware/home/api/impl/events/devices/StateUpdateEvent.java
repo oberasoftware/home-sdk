@@ -10,11 +10,13 @@ public class StateUpdateEvent implements ItemEvent {
     private final State state;
     private final String itemId;
     private final String controllerId;
+    private final String label;
 
-    public StateUpdateEvent(State state) {
+    public StateUpdateEvent(State state, String label) {
         this.state = state;
         this.itemId = state.getItemId();
         this.controllerId = state.getControllerId();
+        this.label = label;
     }
 
     @Override
@@ -28,5 +30,19 @@ public class StateUpdateEvent implements ItemEvent {
 
     public State getState() {
         return state;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    @Override
+    public String toString() {
+        return "StateUpdateEvent{" +
+                "state=" + state +
+                ", itemId='" + itemId + '\'' +
+                ", controllerId='" + controllerId + '\'' +
+                ", label='" + label + '\'' +
+                '}';
     }
 }
