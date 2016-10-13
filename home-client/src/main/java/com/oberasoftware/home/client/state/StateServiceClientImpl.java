@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -28,7 +29,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class StateServiceClientImpl implements StateServiceClient {
     private static final Logger LOG = LoggerFactory.getLogger(StateServiceClientImpl.class);
 
-    @Value("${state_svc_url}")
+    @Value("${state_svc_url:}")
     private String stateServiceUrl;
 
     private WebSocketStompClient stompClient;
@@ -37,22 +38,28 @@ public class StateServiceClientImpl implements StateServiceClient {
 
     @Override
     public void connect() {
-        LOG.info("Connecting to State websocket endpoint: {}", getStateServiceUrl());
-        List<Transport> transports = new ArrayList<>(1);
-        transports.add(new WebSocketTransport( new StandardWebSocketClient()));
-        WebSocketClient transport = new SockJsClient(transports);
+        if(!StringUtils.isEmpty(stateServiceUrl)) {
+            LOG.info("Connecting to State websocket endpoint: {}", getStateServiceUrl());
+            List<Transport> transports = new ArrayList<>(1);
+            transports.add(new WebSocketTransport( new StandardWebSocketClient()));
+            WebSocketClient transport = new SockJsClient(transports);
 
-        stompClient = new WebSocketStompClient(transport);
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+            stompClient = new WebSocketStompClient(transport);
+            stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
-        StompSessionHandler sessionHandler = new StateServiceSessionHandler();
-        stompClient.connect(getStateServiceUrl(), sessionHandler);
+            StompSessionHandler sessionHandler = new StateServiceSessionHandler();
+            stompClient.connect(getStateServiceUrl(), sessionHandler);
+        } else {
+            LOG.error("Cannot connect to the state service, no endpoint configured");
+        }
     }
 
     @Override
     public void disconnect() {
-        LOG.info("Disconnect websocket client");
-        stompClient.stop();
+        if(stompClient != null) {
+            LOG.info("Disconnect websocket client");
+            stompClient.stop();
+        }
     }
 
     @Override

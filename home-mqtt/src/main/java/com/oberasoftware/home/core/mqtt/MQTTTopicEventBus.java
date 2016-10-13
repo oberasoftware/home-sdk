@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -27,7 +28,7 @@ public class MQTTTopicEventBus implements DistributedTopicEventBus {
 
     private static final String CONNECTION_STRING = "tcp://%s:%d";
 
-    @Value("${mqtt.host}")
+    @Value("${mqtt.host:}")
     private String mqttHost;
 
     @Value("${mqtt.port:1883}")
@@ -72,27 +73,33 @@ public class MQTTTopicEventBus implements DistributedTopicEventBus {
 
     @Override
     public synchronized void connect() {
-        if(!broker.isConnected()) {
-            try {
-                broker.connect();
-                LOG.info("Connected to MQTT Broker: {} with user: {}", mqttHost, mqttUsername);
+        if(!StringUtils.isEmpty(mqttHost)) {
+            if(!broker.isConnected()) {
+                try {
+                    broker.connect();
+                    LOG.info("Connected to MQTT Broker: {} with user: {}", mqttHost, mqttUsername);
 
-                broker.addListener((receivedTopic, payload) -> {
-                    LOG.debug("Received a message on topic: {} with payload: {}", receivedTopic, payload);
+                    broker.addListener((receivedTopic, payload) -> {
+                        LOG.debug("Received a message on topic: {} with payload: {}", receivedTopic, payload);
 
-                    localEventBus.publish(new MQTTMessageImpl(receivedTopic, payload));
-                });
-            } catch (HomeAutomationException e) {
-                throw new RuntimeHomeAutomationException("Unable to connect to MQTT Broker", e);
+                        localEventBus.publish(new MQTTMessageImpl(receivedTopic, payload));
+                    });
+                } catch (HomeAutomationException e) {
+                    throw new RuntimeHomeAutomationException("Unable to connect to MQTT Broker", e);
+                }
+            } else {
+                LOG.warn("Already connected to broker");
             }
         } else {
-            LOG.warn("Already connected to broker");
+            LOG.error("Cannot connect to MQTT host, not configured");
         }
     }
 
     @Override
     public void disconnect() {
-        broker.disconnect();
+        if(broker != null) {
+            broker.disconnect();
+        }
     }
 
     @Override

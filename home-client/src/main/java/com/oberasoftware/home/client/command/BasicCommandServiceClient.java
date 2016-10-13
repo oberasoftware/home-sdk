@@ -4,11 +4,14 @@ import com.oberasoftware.home.api.client.ClientResponse;
 import com.oberasoftware.home.api.client.CommandServiceClient;
 import com.oberasoftware.home.api.commands.BasicCommand;
 import com.oberasoftware.home.api.model.BasicCommandImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.Future;
@@ -18,8 +21,9 @@ import java.util.concurrent.Future;
  */
 @Component
 public class BasicCommandServiceClient implements CommandServiceClient {
+    private static final Logger LOG = LoggerFactory.getLogger(BasicCommandServiceClient.class);
 
-    @Value("${command_svc_url}")
+    @Value("${command_svc_url:}")
     private String commandServiceBaseUrl;
 
     @Autowired
@@ -32,9 +36,15 @@ public class BasicCommandServiceClient implements CommandServiceClient {
 
     @Override
     public ClientResponse sendCommand(BasicCommand basicCommand) {
-        ResponseEntity<BasicCommandImpl> response = restTemplate.postForEntity(getCommandUrl(), basicCommand, BasicCommandImpl.class);
+        if(!StringUtils.isEmpty(commandServiceBaseUrl)) {
+            LOG.debug("Doing request to endpoint: {} for command: {}", commandServiceBaseUrl, basicCommand);
+            ResponseEntity<BasicCommandImpl> response = restTemplate.postForEntity(getCommandUrl(), basicCommand, BasicCommandImpl.class);
 
-        return () -> response.getStatusCode() == HttpStatus.OK ? ClientResponse.RESPONSE_STATUS.OK : ClientResponse.RESPONSE_STATUS.FAILED;
+            return () -> response.getStatusCode() == HttpStatus.OK ? ClientResponse.RESPONSE_STATUS.OK : ClientResponse.RESPONSE_STATUS.FAILED;
+        } else {
+            LOG.error("Cannot complete request, no command service url specified");
+            return () -> ClientResponse.RESPONSE_STATUS.FAILED;
+        }
     }
 
     private String getCommandUrl() {

@@ -1,12 +1,16 @@
 package com.oberasoftware.home.api.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.oberasoftware.home.api.types.Value;
 
 /**
  * @author Renze de Vries
  */
 public class ValueTransportMessage {
+
+    @JsonDeserialize(as = ValueImpl.class)
     private Value value;
+
     private String controllerId;
     private String channelId;
     private String label;

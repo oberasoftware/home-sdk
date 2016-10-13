@@ -2,7 +2,7 @@ package com.oberasoftware.home.core.mqtt;
 
 import com.oberasoftware.base.BaseConfiguration;
 import com.oberasoftware.home.api.impl.events.devices.DeviceValueEventImpl;
-import com.oberasoftware.home.api.impl.types.ValueImpl;
+import com.oberasoftware.home.api.model.ValueImpl;
 import com.oberasoftware.home.api.types.VALUE_TYPE;
 import io.moquette.server.Server;
 import io.moquette.server.config.MemoryConfig;

@@ -1,7 +1,7 @@
 package com.oberasoftware.home.api.impl.state;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.oberasoftware.home.api.impl.types.ValueImpl;
+import com.oberasoftware.home.api.model.ValueImpl;
 import com.oberasoftware.home.api.model.StateItem;
 import com.oberasoftware.home.api.types.Value;
 

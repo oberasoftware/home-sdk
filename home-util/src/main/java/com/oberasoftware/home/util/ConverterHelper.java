@@ -3,6 +3,7 @@ package com.oberasoftware.home.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oberasoftware.home.api.exceptions.RuntimeHomeAutomationException;
+import com.oberasoftware.home.api.model.ValueTransportMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,5 +36,10 @@ public class ConverterHelper {
             LOG.error("Unable to map json", e);
             throw new RuntimeHomeAutomationException("Could not map JSON", e);
         }
+    }
+
+    public static void main(String[] args) {
+
+        mapFromJson("{\"value\":{\"value\":520,\"type\":\"NUMBER\"},\"controllerId\":\"max\",\"channelId\":\"Hand\",\"label\":\"5\"}", ValueTransportMessage.class);
     }
 }
