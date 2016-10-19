@@ -1,5 +1,6 @@
 package com.oberasoftware.home.core.mqtt;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.oberasoftware.base.event.DistributedTopicEventBus;
 import com.oberasoftware.base.event.Event;
 import com.oberasoftware.base.event.EventFilter;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Renze de Vries
@@ -39,6 +41,9 @@ public class MQTTTopicEventBus implements DistributedTopicEventBus {
 
     @Value("${mqtt.password:}")
     private String mqttPassword;
+
+    @Value("${retryOnConnect:true}")
+    private boolean retryOnConnect;
 
     @Autowired
     private ConverterManager convertManager;
@@ -75,17 +80,19 @@ public class MQTTTopicEventBus implements DistributedTopicEventBus {
     public synchronized void connect() {
         if(!StringUtils.isEmpty(mqttHost)) {
             if(!broker.isConnected()) {
-                try {
-                    broker.connect();
-                    LOG.info("Connected to MQTT Broker: {} with user: {}", mqttHost, mqttUsername);
-
-                    broker.addListener((receivedTopic, payload) -> {
-                        LOG.debug("Received a message on topic: {} with payload: {}", receivedTopic, payload);
-
-                        localEventBus.publish(new MQTTMessageImpl(receivedTopic, payload));
-                    });
-                } catch (HomeAutomationException e) {
-                    throw new RuntimeHomeAutomationException("Unable to connect to MQTT Broker", e);
+                boolean connected = false;
+                while(!connected) {
+                    try {
+                        connectBroker();
+                        connected = true;
+                    } catch (HomeAutomationException e) {
+                        if(!retryOnConnect) {
+                            throw new RuntimeHomeAutomationException("Unable to connect to MQTT Broker", e);
+                        } else {
+                            Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+                            LOG.warn("Could not connect, retrying in 5 seconds");
+                        }
+                    }
                 }
             } else {
                 LOG.warn("Already connected to broker");
@@ -93,6 +100,17 @@ public class MQTTTopicEventBus implements DistributedTopicEventBus {
         } else {
             LOG.error("Cannot connect to MQTT host, not configured");
         }
+    }
+
+    private void connectBroker() throws HomeAutomationException {
+        broker.connect();
+        LOG.info("Connected to MQTT Broker: {} with user: {}", mqttHost, mqttUsername);
+
+        broker.addListener((receivedTopic, payload) -> {
+            LOG.debug("Received a message on topic: {} with payload: {}", receivedTopic, payload);
+
+            localEventBus.publish(new MQTTMessageImpl(receivedTopic, payload));
+        });
     }
 
     @Override

@@ -40,10 +40,16 @@ public class MQTTBroker {
         try {
             LOG.info("Connecting to host: {}", host);
             client = new MqttClient(host, UUID.randomUUID().toString());
+            client.setTimeToWait(5000);
             client.setCallback(new MqttCallback() {
                 @Override
                 public void connectionLost(Throwable throwable) {
                     LOG.warn("Connection lost to host: {}", host);
+                    try {
+                        client.reconnect();
+                    } catch (MqttException e) {
+                        LOG.error("Could not reconnect", e);
+                    }
                 }
 
                 @Override
@@ -60,6 +66,8 @@ public class MQTTBroker {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setKeepAliveInterval(20);
             options.setMaxInflight(10000);
+            options.setAutomaticReconnect(true);
+            options.setConnectionTimeout(5);
 
             if(!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)) {
                 LOG.info("Authentication details specified, using for connection");
