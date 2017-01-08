@@ -7,16 +7,12 @@
     <parent>
         <groupId>com.oberasoftware</groupId>
         <artifactId>oss-maven</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
     </parent>
 
     <artifactId>home-sdk</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-
-    <properties>
-        <obera.base.version>1.2-SNAPSHOT</obera.base.version>
-    </properties>
 
     <licenses>
         <license>
@@ -55,12 +51,6 @@
                 <groupId>com.oberasoftware</groupId>
                 <artifactId>home-api</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.oberasoftware</groupId>
-                <artifactId>obera-base</artifactId>
-                <version>${obera.base.version}</version>
             </dependency>
 
             <dependency>
