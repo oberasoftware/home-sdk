@@ -133,6 +133,11 @@ public class MQTTTopicEventBus implements DistributedTopicEventBus {
     }
 
     @Override
+    public boolean publishSync(Event event, TimeUnit unit, long time, Object... arguments) {
+        return false;
+    }
+
+    @Override
     public void registerHandler(EventHandler eventHandler) {
         localEventBus.registerHandler(eventHandler);
     }

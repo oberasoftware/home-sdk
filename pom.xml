@@ -15,7 +15,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <obera.base.version>1.1</obera.base.version>
+        <obera.base.version>1.2-SNAPSHOT</obera.base.version>
     </properties>
 
     <licenses>
