@@ -3,7 +3,7 @@ package com.oberasoftware.home.client.command;
 import com.oberasoftware.home.api.client.ClientResponse;
 import com.oberasoftware.home.api.client.CommandServiceClient;
 import com.oberasoftware.home.api.commands.BasicCommand;
-import com.oberasoftware.home.api.model.BasicCommandImpl;
+import com.oberasoftware.home.api.model.impl.BasicCommandImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

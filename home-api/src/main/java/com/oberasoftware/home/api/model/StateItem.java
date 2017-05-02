@@ -1,7 +1,5 @@
 package com.oberasoftware.home.api.model;
 
-import com.oberasoftware.home.api.types.Value;
-
 /**
  * @author renarj
  */

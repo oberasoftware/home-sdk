@@ -1,7 +1,7 @@
 package com.oberasoftware.home.api.impl.commands;
 
 import com.oberasoftware.home.api.commands.ItemValueCommand;
-import com.oberasoftware.home.api.types.Value;
+import com.oberasoftware.home.api.model.Value;
 
 import java.util.HashMap;
 import java.util.Map;

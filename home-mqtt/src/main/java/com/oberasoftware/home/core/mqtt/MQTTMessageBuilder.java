@@ -1,7 +1,7 @@
 package com.oberasoftware.home.core.mqtt;
 
-import com.oberasoftware.home.api.model.ValueTransportMessage;
-import com.oberasoftware.home.api.types.Value;
+import com.oberasoftware.home.api.model.impl.ValueTransportMessage;
+import com.oberasoftware.home.api.model.Value;
 import com.oberasoftware.home.util.ConverterHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

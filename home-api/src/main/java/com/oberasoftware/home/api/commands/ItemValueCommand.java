@@ -1,6 +1,6 @@
 package com.oberasoftware.home.api.commands;
 
-import com.oberasoftware.home.api.types.Value;
+import com.oberasoftware.home.api.model.Value;
 
 import java.util.Map;
 

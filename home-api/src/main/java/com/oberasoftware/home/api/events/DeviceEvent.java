@@ -8,7 +8,5 @@ import com.oberasoftware.base.event.Event;
 public interface DeviceEvent extends Event {
     String getControllerId();
 
-    String getPluginId();
-
     String getDeviceId();
 }

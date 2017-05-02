@@ -1,7 +1,7 @@
 package com.oberasoftware.home.api.impl.events.items;
 
 import com.oberasoftware.home.api.events.ItemValueEvent;
-import com.oberasoftware.home.api.types.Value;
+import com.oberasoftware.home.api.model.Value;
 
 /**
  * @author Renze de Vries

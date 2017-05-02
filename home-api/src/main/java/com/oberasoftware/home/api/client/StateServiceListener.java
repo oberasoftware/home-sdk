@@ -1,6 +1,6 @@
 package com.oberasoftware.home.api.client;
 
-import com.oberasoftware.home.api.model.ValueTransportMessage;
+import com.oberasoftware.home.api.model.impl.ValueTransportMessage;
 
 /**
  * @author Renze de Vries

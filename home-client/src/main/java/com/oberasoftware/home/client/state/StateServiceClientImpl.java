@@ -2,7 +2,7 @@ package com.oberasoftware.home.client.state;
 
 import com.oberasoftware.home.api.client.StateServiceClient;
 import com.oberasoftware.home.api.client.StateServiceListener;
-import com.oberasoftware.home.api.model.ValueTransportMessage;
+import com.oberasoftware.home.api.model.impl.ValueTransportMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

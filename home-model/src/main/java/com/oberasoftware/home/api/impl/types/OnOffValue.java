@@ -1,7 +1,7 @@
 package com.oberasoftware.home.api.impl.types;
 
-import com.oberasoftware.home.api.types.VALUE_TYPE;
-import com.oberasoftware.home.api.types.Value;
+import com.oberasoftware.home.api.model.VALUE_TYPE;
+import com.oberasoftware.home.api.model.Value;
 
 /**
  * @author Renze de Vries

@@ -1,4 +1,4 @@
-package com.oberasoftware.home.api.model;
+package com.oberasoftware.home.api.model.impl;
 
 import com.oberasoftware.home.api.commands.BasicCommand;
 

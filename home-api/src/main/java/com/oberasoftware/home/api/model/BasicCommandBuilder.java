@@ -1,6 +1,7 @@
 package com.oberasoftware.home.api.model;
 
 import com.oberasoftware.home.api.commands.BasicCommand;
+import com.oberasoftware.home.api.model.impl.BasicCommandImpl;
 
 import java.util.HashMap;
 import java.util.Map;

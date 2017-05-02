@@ -1,4 +1,4 @@
-package com.oberasoftware.home.api.types;
+package com.oberasoftware.home.api.model;
 
 /**
  * @author renarj

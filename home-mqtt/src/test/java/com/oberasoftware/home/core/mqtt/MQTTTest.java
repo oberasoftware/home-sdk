@@ -2,8 +2,8 @@ package com.oberasoftware.home.core.mqtt;
 
 import com.oberasoftware.base.BaseConfiguration;
 import com.oberasoftware.home.api.impl.events.devices.DeviceValueEventImpl;
-import com.oberasoftware.home.api.model.ValueImpl;
-import com.oberasoftware.home.api.types.VALUE_TYPE;
+import com.oberasoftware.home.api.model.impl.ValueImpl;
+import com.oberasoftware.home.api.model.VALUE_TYPE;
 import io.moquette.server.Server;
 import io.moquette.server.config.MemoryConfig;
 import org.junit.After;
@@ -67,7 +67,7 @@ public class MQTTTest {
 
         topicEventBus.subscribe("/states/#");
 
-        topicEventBus.publish(new DeviceValueEventImpl("testController", "plugin1", "device1",
+        topicEventBus.publish(new DeviceValueEventImpl("testController", "device1",
                 new ValueImpl(VALUE_TYPE.DECIMAL, 100.5), "power"));
 
         LOG.info("Awaiting message");

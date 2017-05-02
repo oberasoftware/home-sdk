@@ -1,21 +1,19 @@
 package com.oberasoftware.home.api.impl.events.devices;
 
 import com.oberasoftware.home.api.events.DeviceValueEvent;
-import com.oberasoftware.home.api.types.Value;
+import com.oberasoftware.home.api.model.Value;
 
 /**
  * @author renarj
  */
 public class DeviceValueEventImpl implements DeviceValueEvent {
     private final String controllerId;
-    private final String pluginId;
     private final String deviceId;
     private final Value value;
     private final String label;
 
-    public DeviceValueEventImpl(String controllerId, String pluginId, String deviceId, Value value, String label) {
+    public DeviceValueEventImpl(String controllerId, String deviceId, Value value, String label) {
         this.controllerId = controllerId;
-        this.pluginId = pluginId;
         this.deviceId = deviceId;
         this.value = value;
         this.label = label;
@@ -24,11 +22,6 @@ public class DeviceValueEventImpl implements DeviceValueEvent {
     @Override
     public String getControllerId() {
         return controllerId;
-    }
-
-    @Override
-    public String getPluginId() {
-        return pluginId;
     }
 
     @Override
@@ -50,7 +43,6 @@ public class DeviceValueEventImpl implements DeviceValueEvent {
     public String toString() {
         return "DeviceValueEventImpl{" +
                 "controllerId='" + controllerId + '\'' +
-                ", pluginId='" + pluginId + '\'' +
                 ", deviceId='" + deviceId + '\'' +
                 ", value=" + value +
                 ", label='" + label + '\'' +

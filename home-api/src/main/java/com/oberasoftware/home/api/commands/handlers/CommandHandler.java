@@ -1,7 +1,7 @@
 package com.oberasoftware.home.api.commands.handlers;
 
 import com.oberasoftware.home.api.commands.Command;
-import com.oberasoftware.home.api.model.storage.Item;
+import com.oberasoftware.home.api.model.Item;
 
 /**
  * @author renarj
